@@ -1,6 +1,6 @@
 {
-  "shipName": "Nebula Runner",
-  "color": "#22d3ee",
-  "shipModel": "interceptor",
+  "shipName": "Death Star",
+  "color": "#D3D3D3",
+  "shipModel": "hauler",
   "emblem": "comet"
 }
