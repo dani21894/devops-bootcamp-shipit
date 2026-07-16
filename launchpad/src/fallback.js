@@ -1,5 +1,6 @@
 import { emblemSvg } from './emblems.js';
 import { escapeHtml } from './dom.js';
+import { renderTelemetry } from './telemetry.js';
 
 export function shouldUseFallback({ gl, reducedMotion }) {
   return !gl || !!reducedMotion;
@@ -26,4 +27,5 @@ export function renderFallback(root, params, callsign, note = 'Static view — m
     <p class="note">${note}</p>
   `;
   root.append(el);
+  renderTelemetry(root, params, callsign); // same readout as the live view (reduced-motion parity)
 }

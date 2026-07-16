@@ -64,10 +64,10 @@ already did `docker build` + ECR by hand in the AWS sessions — S4 *automates t
 The one integration point. Keep it stable; slides and the reference workflows depend on it.
 
 - **Identity** = the learner's GitHub username (`${{ github.actor }}`), used as `callsign`.
-- **Config** the board needs comes from the learner's `ship.config.json`: `color` (sets the ship's
-  hue — every saturated texel takes that hue; greys/blacks stay neutral — and drives the UI accent)
-  and `shipModel` (which of the 4 ships the board renders in orbit); `shipName` is a cosmetic label,
-  not identity.
+- **Config** the board needs comes from the learner's `ship.config.json`: `color` (hex **or** a
+  named-palette colour; sets the ship's hue — every saturated texel takes that hue; greys/blacks stay
+  neutral — and drives the UI accent) and `shipModel` (which of the 4 ships the board renders in
+  orbit); `shipName` is a cosmetic label, not identity.
 - **Transport:** each workflow stage POSTs one event to the board.
 
 ```
@@ -79,7 +79,7 @@ Content-Type: application/json
   "callsign": "octocat",          // GitHub username
   "stage":    "build",            // pad | build | test | clearance | liftoff
   "status":   "passed",           // running | passed | failed | aborted | shipped
-  "color":    "#22d3ee",          // from the learner's ship.config.json; sets the ship's hue
+  "color":    "#22d3ee",          // hex or a colour name (e.g. "red"); board normalizes → hex, sets the ship's hue
   "shipModel":"fighter",          // from ship.config.json: fighter · interceptor · hauler · scout
   "version":  "v3",               // optional; image/site tag (for rollback demo)
   "siteUrl":  "https://…"         // optional; the live deployed site to link from orbit
@@ -99,9 +99,11 @@ Content-Type: application/json
 Frozen — slides quote these verbatim.
 
 - **Config file** learners edit: `ship.config.json` → `{ shipName, color, shipModel, emblem }`.
-  - `shipName` non-empty ≤ 24 chars · `color` hex `/^#[0-9a-fA-F]{6}$/` (recolours the ship — sets
-    its hue to `color`; every saturated texel takes that hue, greys/blacks stay neutral — and drives
-    the UI accent) · `shipModel` ∈ `fighter · interceptor · hauler · scout` · `emblem` ∈
+  - `shipName` non-empty ≤ 24 chars · `color` hex `/^#[0-9a-fA-F]{6}$/` **or** a named-palette colour
+    (`red · orange · amber · yellow · lime · green · emerald · teal · cyan · sky · blue · indigo ·
+    violet · purple · fuchsia · pink · rose · white · gray/grey · black`), resolved to hex everywhere
+    (recolours the ship — sets its hue to `color`; every saturated texel takes that hue, greys/blacks
+    stay neutral — and drives the UI accent) · `shipModel` ∈ `fighter · interceptor · hauler · scout` · `emblem` ∈
     `comet · bolt · star · ring · delta · phoenix`. `callsign` is **not** in config — it's the GitHub
     username, injected via `VITE_CALLSIGN` at build.
   - The ship is one of four low-poly spaceships (Quaternius, CC0), hue-set by `color`; the site and

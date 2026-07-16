@@ -15,9 +15,14 @@ test('validateConfig accepts a well-formed config', () => {
 });
 
 test('validateConfig rejects a bad colour', () => {
-  const r = validateConfig({ ...good, color: 'blue' });
+  const r = validateConfig({ ...good, color: 'blurple' });
   assert.equal(r.ok, false);
   assert.match(r.errors.join(' '), /colour|color/i);
+});
+
+test('validateConfig accepts a named colour; toRenderParams resolves it to hex', () => {
+  assert.equal(validateConfig({ ...good, color: 'blue' }).ok, true);
+  assert.equal(toRenderParams({ ...good, color: 'Blue' }).color, '#3b82f6'); // case-insensitive → hex
 });
 
 test('validateConfig rejects an unknown emblem', () => {
