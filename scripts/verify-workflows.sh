@@ -25,7 +25,8 @@ done
 has "$WF/deploy.cicd1.yml" "branches: [main]"
 has "$WF/deploy.cicd1.yml" "VITE_CALLSIGN: \${{ github.actor }}"
 has "$WF/deploy.cicd1.yml" "actions/deploy-pages@v4"
-has "$WF/deploy.cicd1.yml" "path: dist"
+has "$WF/deploy.cicd1.yml" "path: launchpad/dist"
+has "$WF/deploy.cicd1.yml" "working-directory: launchpad"
 
 # cicd2 — adds the pre-flight test gate that blocks deploy
 has "$WF/deploy.cicd2.yml" "npm test"

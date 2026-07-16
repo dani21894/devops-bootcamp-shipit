@@ -1,5 +1,26 @@
 // Board copy of the launchpad ship registry + hue math. Keep byte-identical to
-// launchpad/src/ship-schema.js's SHIPS / SHIP_IDS / DEFAULT_SHIP / hueOf.
+// launchpad/src/ship-schema.js's SHIPS / SHIP_IDS / DEFAULT_SHIP / hueOf /
+// NAMED_COLORS / normalizeColor.
+export const COLOR_RE = /^#[0-9a-fA-F]{6}$/;
+
+// A learner may POST a colour name; resolve it to hex so the roster + spectator
+// scene only ever handle #rrggbb. Mirror of launchpad/src/ship-schema.js.
+export const NAMED_COLORS = {
+  red: '#ef4444', orange: '#f97316', amber: '#f59e0b', yellow: '#eab308',
+  lime: '#84cc16', green: '#22c55e', emerald: '#10b981', teal: '#14b8a6',
+  cyan: '#22d3ee', sky: '#38bdf8', blue: '#3b82f6', indigo: '#6366f1',
+  violet: '#8b5cf6', purple: '#a855f7', fuchsia: '#d946ef', pink: '#ec4899',
+  rose: '#f43f5e', white: '#f8fafc', gray: '#94a3b8', grey: '#94a3b8',
+  black: '#0f172a',
+};
+
+export function normalizeColor(input) {
+  if (typeof input !== 'string') return null;
+  const s = input.trim();
+  if (COLOR_RE.test(s)) return s;
+  return NAMED_COLORS[s.toLowerCase()] ?? null;
+}
+
 export const SHIPS = [
   { id: 'fighter',     file: 'fighter.glb',     label: 'Fighter' },
   { id: 'interceptor', file: 'interceptor.glb', label: 'Interceptor' },
