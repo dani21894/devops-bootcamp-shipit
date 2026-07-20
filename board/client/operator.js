@@ -9,8 +9,12 @@ const sessionEl = document.getElementById('session');
 const resultEl = document.getElementById('result');
 const liveEl = document.getElementById('live');
 
-keyEl.value = localStorage.getItem('shipit-operator-key') || '';
-keyEl.oninput = () => localStorage.setItem('shipit-operator-key', keyEl.value);
+const storage = {
+  get() { try { return localStorage.getItem('shipit-operator-key') || ''; } catch { return ''; } },
+  set(v) { try { localStorage.setItem('shipit-operator-key', v); } catch { /* storage locked — key lives only in the field */ } },
+};
+keyEl.value = storage.get();
+keyEl.oninput = () => storage.set(keyEl.value);
 
 async function call(path, body) {
   resultEl.textContent = `${path} …`;
