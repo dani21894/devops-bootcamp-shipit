@@ -10,7 +10,10 @@
     <main id="cockpit">
       <div id="field"></div>
       <div id="dock">
-        <p id="status">connecting…</p>
+        <div id="statusrow">
+          <p id="status">connecting…</p>
+          <button id="mute" type="button" aria-label="toggle sound">🔊</button>
+        </div>
         <pre id="prompt" aria-live="polite"></pre>
         <input id="entry" autocomplete="off" autocapitalize="off" spellcheck="false" autofocus />
       </div>

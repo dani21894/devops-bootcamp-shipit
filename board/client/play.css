@@ -9,7 +9,10 @@ body { margin: 0; background: #0b1220; color: #e2e8f0; font: 16px/1.4 ui-monospa
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
   display: flex; flex-direction: column; gap: 0.5rem;
 }
+#statusrow { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 #status { color: #94a3b8; margin: 0; }
+#mute { background: none; border: none; padding: 0; cursor: pointer; font-size: 1rem; opacity: 0.7; }
+#mute:hover { opacity: 1; }
 #prompt { font-size: 1.4rem; margin: 0; padding: 0.6rem 0.9rem; background: #111a2e; border-radius: 8px; min-height: 1.8rem; }
 #prompt[data-done='1'] { outline: 2px solid #22d3ee; }
 #entry { font: inherit; font-size: 1.1rem; padding: 0.6rem 0.9rem; background: #0f172a; color: #e2e8f0; border: 2px solid #334155; border-radius: 8px; }

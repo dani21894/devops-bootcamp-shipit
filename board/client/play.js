@@ -1,6 +1,7 @@
 import './play.css';
 import { typedState } from './typing.js';
 import { createRaceTrack } from './race-track.js';
+import { sfx } from './sfx.js';
 
 const params = new URLSearchParams(location.search);
 const callsign = (params.get('callsign') || '').toLowerCase();
@@ -14,6 +15,12 @@ let phase = 'idle';
 let completed = 0;  // my confirmed position (optimistic; server is authoritative)
 let synced = false; // true once we've trusted the server's position after (re)connect
 let prevPhase = 'idle';
+let lastTyped = { len: 0, matched: 0, done: false }; // for keystroke sfx deltas
+
+const muteBtn = document.getElementById('mute');
+const showMute = () => { muteBtn.textContent = sfx.muted ? '🔇' : '🔊'; };
+muteBtn.onclick = () => { sfx.muted = !sfx.muted; showMute(); };
+showMute();
 
 function render() {
   const target = prompts[completed] || '';
@@ -71,6 +78,7 @@ function connect() {
       if (!synced) { completed = serverCompleted; synced = true; }             // (re)connect/reload: trust the server's position
       else if (m.phase === 'running' && prevPhase !== 'running') completed = serverCompleted; // new round: server reset us to 0
       // during a running round, keep the local optimistic `completed`; the server silently rejects bad progress
+      if (m.phase === 'running' && prevPhase !== 'running') sfx.go();
       prevPhase = m.phase;
       track.update({ phase: m.phase, total: m.total, ships: m.ships || [] });
       render();
@@ -79,12 +87,18 @@ function connect() {
   entry.oninput = () => {
     const target = prompts[completed] || '';
     const { matched, done } = typedState(target, entry.value);
+    if (phase === 'running') {
+      if (entry.value.length > lastTyped.len) (matched > lastTyped.matched ? sfx.key() : sfx.miss());
+      if (done && !lastTyped.done) sfx.ready();
+    }
+    lastTyped = { len: entry.value.length, matched, done };
     // A fully typed command holds just short of the boundary — ENTER runs it
     // (the boost). Typing a command and running it stay distinct beats.
     if (phase === 'running' && target.length > 0) sendFrac(done ? 0.9 : matched / target.length);
     render();
   };
   entry.onkeydown = (e) => {
+    sfx.unlock();
     if (e.key !== 'Enter') return;
     const target = prompts[completed] || '';
     const { done } = typedState(target, entry.value);
@@ -92,10 +106,13 @@ function connect() {
       sendFrac.cancel();
       completed += 1;
       entry.value = '';
+      lastTyped = { len: 0, matched: 0, done: false };
       ws.send(JSON.stringify({ t: 'progress', completed }));
       track.boost(callsign);
+      if (completed >= prompts.length) sfx.finish(); else sfx.boost();
       render();
     } else if (phase === 'running') {
+      sfx.error();
       entry.classList.remove('shake');
       void entry.offsetWidth; // restart the animation on rapid re-trigger
       entry.classList.add('shake');
@@ -106,7 +123,8 @@ function connect() {
 }
 
 // Click/tap anywhere returns focus to the input — racers never hunt for it.
-document.addEventListener('click', () => { if (!entry.disabled) entry.focus(); });
+// Doubles as the audio unlock gesture.
+document.addEventListener('click', () => { sfx.unlock(); if (!entry.disabled) entry.focus(); });
 
 if (!callsign) { statusEl.textContent = 'No callsign — open this from your ship\'s READY button.'; entry.disabled = true; }
 else connect();
