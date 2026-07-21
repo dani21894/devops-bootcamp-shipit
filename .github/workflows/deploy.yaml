@@ -1,11 +1,14 @@
-name: deploy
-on: [push, workflow_dispatch]
+name: cicd
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 defaults:
   run:
     working-directory: launchpad
 
 jobs:
   test:
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -17,6 +20,9 @@ jobs:
           BOARD_URL: ${{ vars.BOARD_URL }}
           SHIPIT_TOKEN: ${{ secrets.SHIPIT_TOKEN }}
       - run: npm run build
+        env:
+          VITE_BOARD_URL: ${{ vars.BOARD_URL }}
+          VITE_CALLSIGN: ${{ github.actor }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: launchpad/dist
