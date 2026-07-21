@@ -1,8 +1,7 @@
-name: ci-cd
+name: cicd
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
-
 defaults:
   run:
     working-directory: launchpad
@@ -20,7 +19,6 @@ jobs:
         env:
           BOARD_URL: ${{ vars.BOARD_URL }}
           SHIPIT_TOKEN: ${{ secrets.SHIPIT_TOKEN }}
-
   deploy:
     needs: test
     if: always() && github.event.pull_request.merged == true
@@ -32,6 +30,7 @@ jobs:
       - run: npm run build
         env:
           VITE_BOARD_URL: ${{ vars.BOARD_URL }}
+          VITE_CALLSIGN: ${{ github.actor }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: launchpad/dist
