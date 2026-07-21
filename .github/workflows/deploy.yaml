@@ -19,14 +19,6 @@ jobs:
         env:
           BOARD_URL: ${{ vars.BOARD_URL }}
           SHIPIT_TOKEN: ${{ secrets.SHIPIT_TOKEN }}
-  deploy:
-    needs: test
-    if: always() && github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-      - run: npm clean-install
       - run: npm run build
         env:
           VITE_BOARD_URL: ${{ vars.BOARD_URL }}
