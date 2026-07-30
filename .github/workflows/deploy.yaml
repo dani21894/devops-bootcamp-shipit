@@ -29,7 +29,7 @@ jobs:
       - run: npm clean-install
       - run: npm run build
         env:
-          VITE_BOARD_URL: http://54.179.146.138/
+          VITE_BOARD_URL: http://54.179.146.138
       - uses: actions/upload-pages-artifact@v5
         with:
           path: launchpad/dist
