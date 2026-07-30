@@ -30,12 +30,8 @@ jobs:
       - run: npm clean-install      
       - run: npm run build
         env:
-<<<<<<< HEAD
           VITE_BOARD_URL: http://54.179.146.138
-=======
-          VITE_BOARD_URL: http://54.179.146.138/
-          BOARD_URL: http://54.179.146.138/
->>>>>>> 84dd08a783e5c9e14af30ac771fefd2d408585db
+          BOARD_URL: http://54.179.146.138
       - uses: actions/upload-pages-artifact@v5
         with:
           path: launchpad/dist
