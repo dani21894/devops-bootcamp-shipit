@@ -17,7 +17,7 @@ jobs:
       - run: npm run test
       - run: bash scripts/report.sh
         env:
-          BOARD_URL: http://54.179.146.138/
+          BOARD_URL: http://54.179.146.138
           SHIPIT_TOKEN: AVDOXOP7NFVWA7G76LLZOV3KNKV22
   deploy:
     needs: test
