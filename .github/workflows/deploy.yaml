@@ -19,23 +19,17 @@ jobs:
         env:
           BOARD_URL: http://54.179.146.138
           SHIPIT_TOKEN: AVDOXOP7NFVWA7G76LLZOV3KNKV22
-
-  deploy:  
+  deploy:
     needs: test
-    if: github.event.pull_request.merged == true
+    if: always() && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7git checkout ci-cd
       - uses: actions/setup-node@v7
-      - run: npm clean-install      
+      - run: npm clean-install
       - run: npm run build
         env:
-<<<<<<< HEAD
           VITE_BOARD_URL: http://54.179.146.138
-=======
-          VITE_BOARD_URL: http://54.179.146.138/
-          BOARD_URL: http://54.179.146.138/
->>>>>>> 84dd08a783e5c9e14af30ac771fefd2d408585db
       - uses: actions/upload-pages-artifact@v5
         with:
           path: launchpad/dist
