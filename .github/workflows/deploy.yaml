@@ -17,20 +17,21 @@ jobs:
       - run: npm run test
       - run: bash scripts/report.sh
         env:
-          BOARD_URL: ${{ vars.BOARD_URL }}
-          SHIPIT_TOKEN: ${{ secrets.SHIPIT_TOKEN }}
-  deploy:
+          BOARD_URL: http://54.179.146.138
+          SHIPIT_TOKEN: AVDOXOP7NFVWA7G76LLZOV3KNKV22
+
+  deploy:  
     needs: test
-    if: always() && github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
-      - run: npm clean-install
+      - run: npm clean-install      
       - run: npm run build
         env:
-          VITE_BOARD_URL: ${{ vars.BOARD_URL }}
-          VITE_CALLSIGN: ${{ github.actor }}
+          VITE_BOARD_URL: http://54.179.146.138/
+          BOARD_URL: http://54.179.146.138/
       - uses: actions/upload-pages-artifact@v5
         with:
           path: launchpad/dist
