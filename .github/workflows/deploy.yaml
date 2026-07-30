@@ -23,7 +23,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7git checkout ci-cd
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
       - run: npm clean-install
       - run: npm run build
