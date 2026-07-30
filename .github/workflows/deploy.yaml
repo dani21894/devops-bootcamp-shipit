@@ -21,7 +21,6 @@ jobs:
           SHIPIT_TOKEN: AVDOXOP7NFVWA7G76LLZOV3KNKV22
   deploy:
     needs: test
-    if: always() && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7git checkout ci-cd
